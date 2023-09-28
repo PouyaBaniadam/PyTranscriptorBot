@@ -2,26 +2,25 @@ import os
 
 import speech_recognition as sr
 from aiogram import Bot, Dispatcher, types
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
+from aiogram.types import ChatActions
 from moviepy.editor import AudioFileClip
 
-BOT_TOKEN = 'YOUR_TELEGRAM_API_TOKEN'
+BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
-dp.middleware.setup(LoggingMiddleware())
 
 output_directory = 'audio_output'
-
 os.makedirs(output_directory, exist_ok=True)
-
 recognizer = sr.Recognizer()
 
 
 @dp.message_handler(content_types=types.ContentType.VOICE)
 async def convert_audio(message: types.Message):
-    voice_file = await message.voice.get_file()
+    # Simulate typing...
+    await message.answer_chat_action(ChatActions.TYPING)
 
+    voice_file = await message.voice.get_file()
     voice_path = os.path.join(output_directory, voice_file.file_id + '.ogg')
     await voice_file.download(voice_path)
 
