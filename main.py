@@ -1,11 +1,10 @@
 import os
-
 import speech_recognition as sr
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ChatActions
 from moviepy.editor import AudioFileClip
 
-BOT_TOKEN = 'YOUR_BOT_TOKEN_HERE'
+BOT_TOKEN = 'YOUR_BOT_TOKEN'
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -15,9 +14,13 @@ os.makedirs(output_directory, exist_ok=True)
 recognizer = sr.Recognizer()
 
 
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    await message.reply("Welcome to the Speech to Text bot! Send me a voice message, and I will convert it to text.")
+
+
 @dp.message_handler(content_types=types.ContentType.VOICE)
 async def convert_audio(message: types.Message):
-    # Simulate typing...
     await message.answer_chat_action(ChatActions.TYPING)
 
     voice_file = await message.voice.get_file()
