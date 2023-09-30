@@ -16,7 +16,10 @@ recognizer = sr.Recognizer()
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    await message.reply("Welcome to the Speech to Text bot! Send me a voice message, and I will convert it to text.")
+    await message.reply("""سلام!  🖐️
+این ربات یکی از بهترین Transcriptor های حال حاضر به زبان فارسی هستش. 🎧
+می‌تونید یک ویس با صدای دلنشینتون برامون بفرستید تا در عرض چند ثانیه متنش رو بهتون تحویل بدیم! 📝
+""")
 
 
 @dp.message_handler(content_types=types.ContentType.VOICE)
@@ -36,9 +39,10 @@ async def convert_audio(message: types.Message):
         try:
             text = recognizer.recognize_google(audio, language='fa-IR')
         except sr.UnknownValueError:
-            text = "Sorry, I couldn't understand the audio."
+            text = """صدات واضح نمیاد! ☹️
+لطفا دوباره ویس بده! 😁"""
         except sr.RequestError as e:
-            text = f"Sorry, there was an error with the speech recognition service: {str(e)}"
+            text = "یه مشکل از سمت سرور پیش اومده! لطفا به ادمین پیام بده. 😊"
 
     await message.reply(text)
 
