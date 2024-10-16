@@ -1,10 +1,16 @@
 import os
+
 import speech_recognition as sr
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ChatActions
+from dotenv import load_dotenv
 from moviepy.editor import AudioFileClip
 
-BOT_TOKEN = 'YOUR_BOT_TOKEN'
+from commands import Commands
+from messages import Messages
+
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(bot)
@@ -14,12 +20,9 @@ os.makedirs(output_directory, exist_ok=True)
 recognizer = sr.Recognizer()
 
 
-@dp.message_handler(commands=['start'])
+@dp.message_handler(commands=[Commands.start])
 async def start(message: types.Message):
-    await message.reply("""سلام!  🖐️
-این ربات یکی از بهترین Transcriptor های حال حاضر به زبان فارسی هستش. 🎧
-می‌تونید یک ویس با صدای دلنشینتون برامون بفرستید تا در عرض چند ثانیه متنش رو بهتون تحویل بدیم! 📝
-""")
+    await message.reply(Messages.welcome_message)
 
 
 @dp.message_handler(content_types=types.ContentType.VOICE)
@@ -39,10 +42,9 @@ async def convert_audio(message: types.Message):
         try:
             text = recognizer.recognize_google(audio, language='fa-IR')
         except sr.UnknownValueError:
-            text = """صدات واضح نمیاد! ☹️
-لطفا دوباره ویس بده! 😁"""
+            text = Messages.not_recognizable_voice
         except sr.RequestError as e:
-            text = "یه مشکل از سمت سرور پیش اومده! لطفا به ادمین پیام بده. 😊"
+            text = f"{Messages.following_problem_occurred} : {e}"
 
     await message.reply(text)
 
