@@ -1,2 +1,1 @@
-class Commands:
-    start = "start"
+START = "start"

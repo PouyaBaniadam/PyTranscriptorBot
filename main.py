@@ -6,8 +6,8 @@ from aiogram.types import ChatActions
 from dotenv import load_dotenv
 from moviepy.editor import AudioFileClip
 
-from commands import Commands
-from messages import Messages
+import commands
+import messages
 
 load_dotenv()
 BOT_TOKEN = os.getenv('BOT_TOKEN')
@@ -20,9 +20,9 @@ os.makedirs(output_directory, exist_ok=True)
 recognizer = sr.Recognizer()
 
 
-@dp.message_handler(commands=[Commands.start])
+@dp.message_handler(commands=[commands.START])
 async def start(message: types.Message):
-    await message.reply(Messages.welcome_message)
+    await message.reply(messages.WELCOME_MESSAGE)
 
 
 @dp.message_handler(content_types=types.ContentType.VOICE)
@@ -42,9 +42,9 @@ async def convert_audio(message: types.Message):
         try:
             text = recognizer.recognize_google(audio, language='fa-IR')
         except sr.UnknownValueError:
-            text = Messages.not_recognizable_voice
+            text = messages.NOT_RECOGNIZABLE_VOICE
         except sr.RequestError as e:
-            text = f"{Messages.following_problem_occurred} : {e}"
+            text = f"{messages.AN_ERROR_OCCURRED} : {e}"
 
     await message.reply(text)
 
