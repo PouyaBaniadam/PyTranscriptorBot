@@ -1,5 +1,6 @@
 import os
 
+import aiogram
 import speech_recognition as sr
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import ChatActions
@@ -46,7 +47,10 @@ async def convert_audio(message: types.Message):
         except sr.RequestError as e:
             text = f"{messages.AN_ERROR_OCCURRED} : {e}"
 
-    await message.reply(text)
+    try:
+        await message.reply(text)
+    except aiogram.utils.exceptions.BadRequest:
+        await message.answer(text)
 
 
 if __name__ == '__main__':
